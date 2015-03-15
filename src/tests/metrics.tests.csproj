@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{876848CE-99F0-4AA1-8468-365204B77123}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Nohros.Metrics.Tests</RootNamespace>
+    <AssemblyName>nohros.metrics.tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
+    <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\..\..\..\src\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="annotation\AnnotatedMetricsTests.cs" />
+    <Compile Include="core\BucketTimerTests.cs" />
+    <Compile Include="core\CallableGaugeTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\CounterTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\ExponentiallyDecayingReservoirTests.cs" />
+    <Compile Include="core\ExponentialWeightedMovingAverageTest.cs" />
+    <Compile Include="core\MaxGaugeTests.cs" />
+    <Compile Include="core\MeanRateTests.cs" />
+    <Compile Include="core\MetricsConfigTest.cs" />
+    <Compile Include="core\MinGaugeTests.cs" />
+    <Compile Include="core\StepCounterTests.cs" />
+    <Compile Include="core\StepMaxGaugeTests.cs" />
+    <Compile Include="core\StepMinGaugeTests.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="core\SnapshotTests.cs" />
+    <Compile Include="core\StepClock.cs" />
+    <Compile Include="Testing.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="core\UniformResevoirTest.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="nohros">
+      <HintPath>..\packages\must.common.1.15.9.0\lib\net40\nohros.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\library\metrics.csproj">
+      <Project>{EE140ABF-C917-44D7-B89F-D6946332F507}</Project>
+      <Name>metrics</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
