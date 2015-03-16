@@ -30,9 +30,8 @@ namespace Nohros.Metrics.Benchmarks
 
       int warmup = GetSwitchValueAsInt(cmd, "w", "warmup", 1);
       int duration = GetSwitchValueAsInt(cmd, "d", "duration", 10);
-      int parallel = GetSwitchValueAsInt(cmd, "p", "parallel",
-        Environment.ProcessorCount);
-      if (parallel < 0) {
+      int parallel = GetSwitchValueAsInt(cmd, "p", "parallel", 1);
+      if (parallel <= 0) {
         parallel = 1;
       }
       string type = GetSwitchValue(cmd, "t", "type", null);
