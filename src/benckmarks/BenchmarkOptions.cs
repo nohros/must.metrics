@@ -1,9 +1,4 @@
-﻿// Copyright 2009 The Noda Time authors. All rights reserved.
-// Copyright 2015 Nohros Inc. All rights reserved.
-// Use of this source code is governed by the Apache License 2.0,
-// as found in the LICENSE.txt file.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace Nohros.Metrics.Benchmarks
@@ -14,9 +9,10 @@ namespace Nohros.Metrics.Benchmarks
   /// </summary>
   public class BenchmarkOptions
   {
-    private BenchmarkOptions() {
+    BenchmarkOptions() {
       WarmUpTime = TimeSpan.FromSeconds(1);
       TestTime = TimeSpan.FromSeconds(10);
+      Parallel = 1;
     }
 
     /// <summary>
@@ -32,8 +28,36 @@ namespace Nohros.Metrics.Benchmarks
     public static BenchmarkOptions FromCommandLine() {
       CommandLine cmd = CommandLine.ForCurrentProcess;
 
-      // TODO (neylor.silva): Parse the command line and set the options.
-      return new BenchmarkOptions();
+      int warmup = GetSwitchValueAsInt(cmd, "w", "warmup", 1);
+      int duration = GetSwitchValueAsInt(cmd, "d", "duration", 10);
+      int parallel = GetSwitchValueAsInt(cmd, "p", "parallel",
+        Environment.ProcessorCount);
+      if (parallel < 0) {
+        parallel = 1;
+      }
+      string type = GetSwitchValue(cmd, "t", "type", null);
+      string method = GetSwitchValue(cmd, "m", "method", null);
+
+      bool raw = cmd.HasSwitch("r") || cmd.HasSwitch("raw");
+
+      return new BenchmarkOptions {
+        MethodFilter = method,
+        TestTime = TimeSpan.FromSeconds(duration),
+        WarmUpTime = TimeSpan.FromSeconds(warmup),
+        Parallel = parallel,
+        DisplayRawResults = raw
+      };
+    }
+
+    static int GetSwitchValueAsInt(CommandLine cmd, string @switch,
+      string abbrev, int @default) {
+      return cmd
+        .GetSwitchValueAsInt(abbrev, cmd.GetSwitchValueAsInt(@switch, @default));
+    }
+
+    static string GetSwitchValue(CommandLine cmd, string @switch,
+      string abbrev, string @default) {
+      return cmd.GetSwitchValue(abbrev, cmd.GetSwitchValue(@switch, @default));
     }
 
     /// <summary>
@@ -96,5 +120,17 @@ namespace Nohros.Metrics.Benchmarks
     /// Gets the test label.
     /// </summary>
     public string Label { get; private set; }
+
+    /// <summary>
+    /// Gets the degree of paralellism to be used on test.
+    /// </summary>
+    /// <remarks>
+    /// This option should be used only to test code that is thread-safe.
+    /// Using it to test non thread-safe code could generate unexpected
+    /// behavior.
+    /// </remarks>
+    public int Parallel { get; private set; }
+
+    public bool DisplayRawResults { get; private set; }
   }
 }

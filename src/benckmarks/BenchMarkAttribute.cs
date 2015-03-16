@@ -17,7 +17,7 @@ namespace Nohros.Metrics.Benchmarks
   /// before readonly fields.
   /// </remarks>
   [AttributeUsage(AttributeTargets.Method)]
-  public class BenchMarkAttribute : Attribute
+  public class BenchmarkAttribute : Attribute
   {
   }
 }

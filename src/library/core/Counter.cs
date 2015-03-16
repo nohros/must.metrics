@@ -1,5 +1,6 @@
 ﻿using System;
-using Nohros.Concurrent;
+using System.Threading;
+using Nohros.Metrics.Reporting;
 
 namespace Nohros.Metrics
 {
@@ -7,10 +8,11 @@ namespace Nohros.Metrics
   /// A simple counter implementation of the <see cref="ICounter"/> class.
   /// </summary>
   /// <remarks>
-  /// The value is the instantaneous value of the counter and it is never
-  /// negative. If a <see cref="Decrement(long)"/> causes the counter
-  /// do becomes negative its values will be set to zero.
+  /// The value is the total count for the life of the counter.
+  /// <see cref="IMeasureObserver"/>s are responsible for converting to a rate
+  /// and handling overflows if they occur.
   /// </remarks>
+  /// <see cref="StepCounter"/>
   public class Counter : AbstractMetric, ICounter
   {
     long count_;
@@ -51,15 +53,6 @@ namespace Nohros.Metrics
       count_ = initial;
     }
 
-    /// <summary>
-    /// Creates a new counter by using the specified name.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <returns></returns>
-    public static Counter Create(string name) {
-      return new Counter(new MetricConfig(name));
-    }
-
     /// <inheritdoc/>
     public void Increment() {
       Increment(1);
@@ -67,29 +60,48 @@ namespace Nohros.Metrics
 
     /// <inheritdoc/>
     public void Increment(long n) {
-      context_.Send(() => Update(n));
+      Update(n);
     }
 
     /// <inheritdoc/>
-    public void Decrement() {
-      Decrement(1);
+    public override void GetMeasure(Action<Measure> callback) {
+      long tick = context_.Tick;
+      callback(Compute(tick));
     }
 
     /// <inheritdoc/>
-    public void Decrement(long n) {
-      context_.Send(() => Update(-n));
+    public override void GetMeasure<T>(Action<Measure, T> callback, T state) {
+      long tick = context_.Tick;
+      callback(Compute(tick), state);
+    }
+
+    /// <summary>
+    /// Creates a new counter by using the specified name.
+    /// </summary>
+    /// <param name="name">
+    /// The name of the metric.
+    /// </param>
+    public static Counter Create(string name) {
+      return new Counter(new MetricConfig(name));
     }
 
     /// <inheritdoc/>
     protected internal override Measure Compute(long tick) {
-      return CreateMeasure(count_);
+      return new Measure(Config, Count());
+    }
+
+    /// <summary>
+    /// Gets the cuulative counter since the <see cref="Counter"/> was created.
+    /// </summary>
+    /// <returns>
+    /// The cuulative counter since the <see cref="Counter"/> was created.
+    /// </returns>
+    public long Count() {
+      return Interlocked.Read(ref count_);
     }
 
     void Update(long delta) {
-      count_ += delta;
-      if (count_ < 0) {
-        count_ = 0;
-      }
+      Interlocked.Add(ref count_, delta);
     }
   }
 }

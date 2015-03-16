@@ -1,4 +1,5 @@
-﻿
+﻿using System;
+using System.Threading;
 using Nohros.Extensions.Time;
 
 namespace Nohros.Metrics
@@ -10,11 +11,11 @@ namespace Nohros.Metrics
   /// </summary>
   public class StepCounter : AbstractMetric, ICounter, IStepMetric
   {
-    long prev_count_;
-    long curr_count_;
-    long prev_tick_;
-    long curr_tick_;
     readonly TimeUnit unit_;
+    long curr_count_;
+    long curr_tick_;
+    long prev_count_;
+    long prev_tick_;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="StepCounter"/> class
@@ -162,6 +163,23 @@ namespace Nohros.Metrics
       unit_ = unit;
     }
 
+    /// <inheritdoc/>
+    public void Increment() {
+      Increment(1);
+    }
+
+    /// <inheritdoc/>
+    public void Increment(long n) {
+      context_.Send(() => Update(n));
+    }
+
+    public void OnStep() {
+      context_.Send(() => {
+        prev_count_ = curr_count_;
+        prev_tick_ = curr_tick_;
+      });
+    }
+
     /// <summary>
     /// Creates a new counter by using the specified name.
     /// </summary>
@@ -201,33 +219,6 @@ namespace Nohros.Metrics
       return new StepCounter(new MetricConfig(name), initial, unit);
     }
 
-    /// <inheritdoc/>
-    public void Decrement() {
-      Decrement(-1);
-    }
-
-    /// <inheritdoc/>
-    public void Decrement(long n) {
-      context_.Send(() => Update(-n));
-    }
-
-    /// <inheritdoc/>
-    public void Increment() {
-      Increment(1);
-    }
-
-    /// <inheritdoc/>
-    public void Increment(long n) {
-      context_.Send(() => Update(n));
-    }
-
-    public void OnStep() {
-      context_.Send(() => {
-        prev_count_ = curr_count_;
-        prev_tick_ = curr_tick_;
-      });
-    }
-
     double ConvertToUnit(double d) {
       return d/TimeUnit.Ticks.Convert(1, unit_);
     }
@@ -242,9 +233,6 @@ namespace Nohros.Metrics
 
     void Update(long delta) {
       curr_count_ += delta;
-      if (curr_count_ < 0) {
-        curr_count_ = 0;
-      }
     }
   }
 }

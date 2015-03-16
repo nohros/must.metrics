@@ -41,6 +41,9 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="annotation\AnnotatedMetricsTests.cs" />
+    <Compile Include="benchmarks\MaxGaugeBenchmarks.cs" />
+    <Compile Include="benchmarks\CounterBenchmarks.cs" />
+    <Compile Include="benchmarks\InterlockedBenchmarks.cs" />
     <Compile Include="core\BucketTimerTests.cs" />
     <Compile Include="core\CallableGaugeTests.cs">
       <SubType>Code</SubType>
@@ -58,6 +61,7 @@
     <Compile Include="core\StepMaxGaugeTests.cs" />
     <Compile Include="core\StepMinGaugeTests.cs" />
     <Compile Include="Program.cs" />
+    <Compile Include="Program2.cs" />
     <Compile Include="core\SnapshotTests.cs" />
     <Compile Include="core\StepClock.cs" />
     <Compile Include="Testing.cs">
@@ -79,11 +83,16 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\benckmarks\metrics.benchmarks.csproj">
+      <Project>{27BA651C-7219-4AE5-8C3D-61B046D9DA5B}</Project>
+      <Name>metrics.benchmarks</Name>
+    </ProjectReference>
     <ProjectReference Include="..\library\metrics.csproj">
       <Project>{EE140ABF-C917-44D7-B89F-D6946332F507}</Project>
       <Name>metrics</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

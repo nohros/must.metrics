@@ -14,13 +14,11 @@ namespace Nohros.Metrics.Benchmarks
   /// </summary>
   public class BenchmarkResult
   {
-    readonly int iterations_;
-
     public BenchmarkResult(MethodInfo method, int iterations,
       TimeSpan duration) {
       Method = method;
       Duration = duration;
-      iterations_ = iterations;
+      Iterations = iterations;
     }
 
     public MethodInfo Method { get; private set; }
@@ -29,11 +27,11 @@ namespace Nohros.Metrics.Benchmarks
     public int Iterations { get; private set; }
 
     public long CallsPerSecond {
-      get { return iterations_*TimeUnit.Seconds.ToTicks(1)/Duration.Ticks; }
+      get { return Iterations * TimeUnit.Seconds.ToTicks(1) / Duration.Ticks; }
     }
 
     public long NanosecondsPerCall {
-      get { return (long) Duration.Convert(TimeUnit.Nanoseconds) / iterations_; }
+      get { return (long)Duration.Convert(TimeUnit.Nanoseconds) / Iterations; }
     }
   }
 }

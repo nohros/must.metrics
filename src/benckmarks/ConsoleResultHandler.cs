@@ -21,7 +21,7 @@ namespace Nohros.Metrics.Benchmarks
     }
 
     public override void OnStartRun(BenchmarkOptions options) {
-      Console.WriteLine("Environment: CLR {0} on {1} ({2})", Environment.Version,
+      Console.WriteLine("Environment: CLR {0} on {1} ({2}) with ", Environment.Version,
         Environment.OSVersion,
         Environment.Is64BitProcess ? "64 bit" : "32 bit");
       if (options.Label != null) {
