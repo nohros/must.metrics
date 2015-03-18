@@ -41,6 +41,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="annotation\AnnotatedMetricsTests.cs" />
+    <Compile Include="AppMetricsTests.cs" />
     <Compile Include="benchmarks\MaxGaugeBenchmarks.cs" />
     <Compile Include="benchmarks\CounterBenchmarks.cs" />
     <Compile Include="benchmarks\InterlockedBenchmarks.cs" />
