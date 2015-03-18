@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using Nohros.Metrics.Reporting;
 
@@ -83,6 +84,32 @@ namespace Nohros.Metrics
     /// </param>
     public static Counter Create(string name) {
       return new Counter(new MetricConfig(name));
+    }
+
+    /// <summary>
+    /// Creates a new counter by using the specified name.
+    /// </summary>
+    /// <param name="name">
+    /// The name of the metric.
+    /// </param>
+    /// <param name="tags">
+    /// The tags that should be associated with the <see cref="Counter"/>.
+    /// </param>
+    public static Counter Create(string name, Tags tags) {
+      return new Counter(new MetricConfig(name).WithAdditionalTags(tags));
+    }
+
+    /// <summary>
+    /// Creates a new counter by using the specified name.
+    /// </summary>
+    /// <param name="name">
+    /// The name of the metric.
+    /// </param>
+    /// <param name="tags">
+    /// The tags that should be associated with the <see cref="Counter"/>.
+    /// </param>
+    public static Counter Create(string name, IEnumerable<Tag> tags) {
+      return new Counter(new MetricConfig(name).WithAdditionalTags(tags));
     }
 
     /// <inheritdoc/>
