@@ -21,6 +21,42 @@ namespace Nohros.Metrics
   /// constructor with no arguments. If the class cannot be loaded
   /// de defualt metrics registry approach will be used.
   /// </para>
+  /// <para>
+  /// In metrics all <see cref="IMetric"/> should be registered to be reported.
+  /// One critically important thing to remember is that they need to be
+  /// registered exactly once. The main ways achieve this:
+  /// <para>
+  /// Monitors are static members of the class and registered in a static
+  /// initializer block:
+  /// <example>
+  /// public class AlertEvaluator {
+  ///   private static Counter alert_notification_failures =
+  ///     Counter
+  ///       .Create("notificationFailures");
+  /// 
+  ///   static AlertEvaluator() {
+  ///     AppMetrics.RegisterObject(alert_notification_failures);
+  ///   }
+  /// }
+  /// </example>
+  /// </para>
+  /// <para>
+  /// Metrics are members of a singleton and registered in the constructor.
+  /// <example>
+  /// public class SomeSingleton {
+  ///   readonly Counter counter_ = Counter.Create("someCount");
+  /// 
+  ///   SomeSingleton() {
+  ///     AppMetrics.RegisterObject(this);
+  ///   }
+  /// }
+  /// </example>
+  /// Nore that the call to AppMetrics.Register(this) will use reflection to
+  /// add all instances of <see cref="IMetric"/> objects that have been
+  /// declared, and also add a tag class with the value set to the class'
+  /// simple name(<see cref="Type.Name"/>).
+  /// </para>
+  /// </para>
   /// </summary>
   public class AppMetrics
   {
@@ -297,18 +333,45 @@ namespace Nohros.Metrics
     /// </para>
     /// </remarks>
     /// <returns>
+    /// A <see cref="ICompositeMetric"/> based on the fields of the class
+    /// <paramref name="klass"/>.
+    /// </returns>
+    public static ICompositeMetric RegisterObject(Type klass) {
+      return RegisterObject(klass, null);
+    }
+
+    /// <summary>
+    /// Register a <see cref="ICompositeMetric"/> that is a composite for all
+    /// metric fields and annotated attributes of a given object.
+    /// </summary>
+    /// <remarks>
+    /// Object to search for metrics on. All fields of type
+    /// <see cref="IMetric"/> and fields/methods with a
+    /// <see cref="MetricAttribute"/> attribute will be extracted and
+    /// returned using <see cref="ICompositeMetric.Metrics"/>
+    /// <para>
+    /// Note that the <see cref="RegisterObject(object)"/>  will use
+    /// reflection to add all instances of <see cref="IMetric"/> that have
+    /// been declared, and also add a tag with the value set to class simple
+    /// name (<see cref="Type.Name"/>) and namespace (<see cref="Type.Namespace"/>).
+    /// </para>
+    /// </remarks>
+    /// <returns>
     /// A <see cref="ICompositeMetric"/> based on the fields of the class of
     /// <paramref name="obj"/>.
     /// </returns>
     public static ICompositeMetric RegisterObject(object obj) {
+      return RegisterObject(obj.GetType(), obj);
+    }
+
+    static ICompositeMetric RegisterObject(Type klass, object obj) {
       // The tags defined at the class level should be merged with the tags
       // defined for the fields and methods of the class.
-      Type klass = obj.GetType();
       Tags tags =
         new Tags.Builder()
           .WithTags(process_tags_.Build())
           .WithTags(GetTags(klass, true)) // static class tags
-          .WithTags(GetTagsList(obj)) // dynamic class tags
+          .WithTags(GetTagsList(klass, obj)) // dynamic class tags
           .WithTag("class", klass.Name)
           .WithTag("namespace", klass.Namespace)
           .Build();
@@ -376,13 +439,32 @@ namespace Nohros.Metrics
     }
 
     /// <summary>
-    /// 
+    /// Gets a <see cref="IEnumerable{Tag}"/> containing the list of tags that
+    /// was dynamically registered on the class <paramref name="klass"/> for
+    /// the given <paramref name="obj"/>.
     /// </summary>
-    /// <param name="obj"></param>
-    /// <returns></returns>
-    static IEnumerable<Tag> GetTagsList(object obj) {
+    /// <param name="klass">
+    /// The type from which the dynamically list of tags should be extracted.
+    /// </param>
+    /// <param name="obj">
+    /// An object of type <paramref name="klass"/> from which the list of tags
+    /// should be extracted. If the field or method that definy the list
+    /// of tags is static <paramref name="obj"/> should be <c>null</c>.
+    /// </param>
+    /// <returns>
+    /// A <see cref="IEnumerable{Tag}"/> contianing the list of tags that was
+    /// dynamically registered on the class <paramref name="klass"/> for the
+    /// given <paramref name="obj"/>.
+    /// </returns>
+    /// <remarks>
+    /// The <see cref="GetTagsList"/> method search for first a field that can
+    /// be assigned to or a method that returns a <see cref="IEnumerable{Tag}"/>
+    /// and use this to get the list of tags. If the field or method is not
+    /// found an empty enumerable is returned.
+    /// </remarks>
+    static IEnumerable<Tag> GetTagsList(Type klass, object obj) {
       FieldInfo field =
-        GetFields(obj.GetType())
+        GetFields(klass)
           .Where(IsTagList)
           .FirstOrDefault();
 
@@ -391,9 +473,9 @@ namespace Nohros.Metrics
       }
 
       MethodInfo method =
-        GetMethods(obj.GetType())
+        GetMethods(klass)
           .Where(IsTagList)
-          .FirstOrDefault();
+          .FirstOrDefault(m => m.GetParameters().Length == 0);
 
       if (method != null) {
         return (IEnumerable<Tag>) method.Invoke(obj, new object[0]);

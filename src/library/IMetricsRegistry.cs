@@ -2,6 +2,9 @@
 
 namespace Nohros.Metrics
 {
+  /// <summary>
+  /// Regsitry to keep track of <see cref="IMetric"/> objects.
+  /// </summary>
   public interface IMetricsRegistry
   {
     /// <summary>
