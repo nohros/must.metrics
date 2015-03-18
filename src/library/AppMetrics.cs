@@ -424,7 +424,6 @@ namespace Nohros.Metrics
     static IMetric Wrap(IMetric metric, Tags tags, FieldInfo field) {
       var field_tags =
         new Tags.Builder(tags)
-          .WithTags(tags)
           .WithTags(metric.Config.Tags)
           .WithTags(GetTags(field))
           .Build();
