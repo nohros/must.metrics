@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>must.metrics</id>
-        <version>0.8.0.6</version>
+        <version>0.8.0.7</version>
         <title>Must Framework - Metrics</title>
         <authors>Nohros Inc</authors>
         <owners>Nohros Inc</owners>

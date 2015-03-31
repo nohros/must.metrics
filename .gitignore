@@ -2,5 +2,6 @@ bin
 obj
 *.suo
 *.user
+*.csproj
 _Resharper.*
 packages
