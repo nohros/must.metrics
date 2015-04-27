@@ -11,7 +11,7 @@ namespace Nohros.Metrics.Sql
   {
     const string kClassName = "Nohros.Metrics.SqlMetricsObserver";
 
-    readonly IMetricsDao metrics_dao_;
+    readonly SqlMetricsDao metrics_dao_;
     readonly ICacheProvider cache_;
 
     /// <summary>
@@ -20,14 +20,14 @@ namespace Nohros.Metrics.Sql
     /// <see cref="ICacheProvider"/>.
     /// </summary>
     /// <param name="metrics_dao">
-    /// A <see cref="IMetricsDao"/> object that can be used to access a sql
+    /// A <see cref="SqlMetricsDao"/> object that can be used to access a sql
     /// database.
     /// </param>
     /// <param name="cache">
     /// A <see cref="ICacheProvider"/> object that can be used to cache
     /// objects.
     /// </param>
-    public SqlMetricsObserver(IMetricsDao metrics_dao, ICacheProvider cache) {
+    public SqlMetricsObserver(SqlMetricsDao metrics_dao, ICacheProvider cache) {
       metrics_dao_ = metrics_dao;
       cache_ = cache;
     }

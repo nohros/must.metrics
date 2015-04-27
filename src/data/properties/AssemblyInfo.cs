@@ -5,8 +5,8 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("nohros.metrics.api")]
-[assembly: AssemblyDescription("nohros.metrics.api")]
+[assembly: AssemblyTitle("nohros.metrics.data")]
+[assembly: AssemblyDescription("nohros.metrics.data")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Nohros Inc")]
 [assembly: AssemblyProduct("Nohros Metrics")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("96104c82-14c1-4e7e-8f01-acbfbf8189b0")]
+[assembly: Guid("41e72081-dc98-4c4b-9441-9c4d4689cbd3")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -29,7 +29,8 @@ using System.Runtime.InteropServices;
 //      Build Number
 //      Revision
 //
-// You can specify all the values or you can default the Revision and Build Numbers 
+// You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
+// [assembly: AssemblyVersion("1.0.*")]
 [assembly: AssemblyVersion("0.1.0.0")]
 [assembly: AssemblyFileVersion("0.1.0.0")]

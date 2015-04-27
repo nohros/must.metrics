@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Data;
 using Nohros.Data;
 using Nohros.Data.SqlServer;
-using Nohros.Metrics.Reporting;
 
 namespace Nohros.Metrics.Sql
 {
-  public class SqlMetricsDao : IMetricsDao
+  public class SqlMetricsDao
   {
     readonly SqlConnectionProvider sql_connection_provider_;
     readonly SqlQueryExecutor sql_query_executor_;

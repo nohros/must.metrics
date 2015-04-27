@@ -203,6 +203,10 @@ namespace Nohros.Metrics
     /// </remarks>
     public Guid Id { get; private set; }
 
+    /// <summary>
+    /// Gets the number of <see cref="Tag"/> elements contained in the
+    /// <see cref="Tags"/> collection.
+    /// </summary>
     public int Count {
       get { return tags_.Count; }
     }
