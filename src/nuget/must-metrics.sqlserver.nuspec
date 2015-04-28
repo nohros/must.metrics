@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
     <metadata>
         <id>must.metrics.sqlserver</id>
-        <version>0.4.0.0</version>
+        <version>0.4.0.1</version>
         <title>Must Framework - Metrics for SqlServer</title>
         <authors>Nohros Inc</authors>
         <owners>Nohros Inc</owners>
@@ -25,5 +25,6 @@
     </metadata>
     <files>
         <file src="..\bin\release\metrics\nohros.metrics.sqlserver.dll" target="lib\net40\nohros.metrics.sqlserver.dll" />
+      <file src="..\bin\release\metrics\nohros.metrics.sqlserver.pdb" target="lib\net40\nohros.metrics.sqlserver.pdb" />
     </files>
 </package>
