@@ -20,8 +20,8 @@ namespace Nohros.Metrics
     const string kMax = "max";
 
     readonly TimeUnit unit_;
-    readonly Counter count_;
-    readonly Counter total_time_;
+    readonly StepCounter count_;
+    readonly StepCounter total_time_;
     readonly StepMaxGauge max_;
     readonly StepMinGauge min_;
     readonly ReadOnlyCollection<IMetric> metrics_;
@@ -32,7 +32,7 @@ namespace Nohros.Metrics
     /// </summary>
     /// <param name="config">
     /// </param>
-    public Timer(MetricConfig config) : this(config, TimeUnit.Milliseconds) {
+    public Timer(MetricConfig config) : this(config, TimeUnit.Seconds) {
     }
 
     public Timer(MetricConfig config, TimeUnit unit)
@@ -45,11 +45,11 @@ namespace Nohros.Metrics
 
       MetricConfig cfg = config.WithAdditionalTag("unit", unit.Name());
 
-      count_ = new Counter(cfg.WithAdditionalTag(kStatistic, kCount), context);
+      count_ = new StepCounter(cfg.WithAdditionalTag(kStatistic, kCount), context);
       max_ = new StepMaxGauge(cfg.WithAdditionalTag(kStatistic, kMax));
       min_ = new StepMinGauge(cfg.WithAdditionalTag(kStatistic, kMin));
       total_time_ =
-        new Counter(cfg.WithAdditionalTag(kStatistic, kTotal), context);
+        new StepCounter(cfg.WithAdditionalTag(kStatistic, kTotal), context);
 
       metrics_ = new ReadOnlyCollection<IMetric>(
         new IMetric[] {

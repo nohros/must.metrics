@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using Nohros.Extensions;
 using Nohros.Extensions.Time;
-using System.Linq;
 
 namespace Nohros.Metrics
 {
@@ -133,38 +132,35 @@ namespace Nohros.Metrics
     /// Wraps a <see cref="StepCounter"/> and makes it observable
     /// only when its measured value is greater than zero.
     /// </summary>
-    class BucketCounter : StepCounter
-    {
-      public BucketCounter(MetricConfig config, MetricContext context)
-        : base(config, context) {
-      }
-
-      public BucketCounter(MetricConfig config, TimeUnit unit, MetricContext context)
-        : base(config, unit, context) {
-      }
-
-      public override void GetMeasure(Action<Measure> callback) {
-        base.GetMeasure(m => {
-          Measure measure =
-            (m.Value > 0)
-              ? m
-              : new Measure(m.MetricConfig, m.Value, false);
-          callback(measure);
-        });
-      }
-
-      public override void GetMeasure<T>(Action<Measure, T> callback, T state) {
-        base.GetMeasure((m, s) => {
-          Measure measure =
-            (m.Value > 0)
-              ? m
-              : new Measure(m.MetricConfig, m.Value, false);
-          callback(measure, s);
-        }, state);
-      }
-    }
-
+    //class BucketCounter : StepCounter
+    //{
+    //  public BucketCounter(MetricConfig config, MetricContext context)
+    //    : base(config, context) {
+    //  }
+    //  public BucketCounter(MetricConfig config, TimeUnit unit, MetricContext context)
+    //    : base(config, unit, context) {
+    //  }
+    //  public override void GetMeasure(Action<Measure> callback) {
+    //    base.GetMeasure(m => {
+    //      Measure measure =
+    //        (m.Value > 0)
+    //          ? m
+    //          : new Measure(m.MetricConfig, m.Value, false);
+    //      callback(measure);
+    //    });
+    //  }
+    //  public override void GetMeasure<T>(Action<Measure, T> callback, T state) {
+    //    base.GetMeasure((m, s) => {
+    //      Measure measure =
+    //        (m.Value > 0)
+    //          ? m
+    //          : new Measure(m.MetricConfig, m.Value, false);
+    //      callback(measure, s);
+    //    }, state);
+    //  }
+    //}
     const string kBucket = "metrics.bucket";
+
     const string kStatistic = "statistic";
     const string kTotal = "total";
     const string kCount = "count";
@@ -173,10 +169,10 @@ namespace Nohros.Metrics
 
     readonly TimeUnit unit_;
     readonly TimeUnit measure_unit_;
-    readonly BucketCounter count_;
-    readonly BucketCounter total_time_;
-    readonly BucketCounter overflow_count_;
-    readonly BucketCounter[] bucket_count_;
+    readonly StepCounter count_;
+    readonly StepCounter total_time_;
+    readonly StepCounter overflow_count_;
+    readonly StepCounter[] bucket_count_;
     readonly long[] buckets_;
     readonly StepMaxGauge max_;
     readonly StepMinGauge min_;
@@ -199,7 +195,7 @@ namespace Nohros.Metrics
           .Config
           .WithAdditionalTag("unit", measure_unit_.Name());
 
-      count_ = new BucketCounter(config.WithAdditionalTag(kStatistic, kCount),
+      count_ = new StepCounter(config.WithAdditionalTag(kStatistic, kCount),
         context);
       max_ = new StepMaxGauge(config.WithAdditionalTag(kStatistic, kMax));
       min_ = new StepMinGauge(config.WithAdditionalTag(kStatistic, kMin));
@@ -212,10 +208,10 @@ namespace Nohros.Metrics
         config
           .WithAdditionalTag(kStatistic, kTotal)
           .WithAdditionalTag("unit", "nounit");
-      total_time_ = new BucketCounter(time_config, TimeUnit.Ticks, context);
+      total_time_ = new StepCounter(time_config, TimeUnit.Ticks, context);
 
       overflow_count_ =
-        new BucketCounter(
+        new StepCounter(
           config
             .WithAdditionalTag(kStatistic, kCount)
             .WithAdditionalTag(kBucket, "bucket=overflow"),
@@ -230,9 +226,9 @@ namespace Nohros.Metrics
 
       string label = unit_.Abbreviation();
 
-      bucket_count_ = new BucketCounter[buckets_.Length];
+      bucket_count_ = new StepCounter[buckets_.Length];
       for (int i = 0; i < buckets_.Length; i++) {
-        bucket_count_[i] = new BucketCounter(
+        bucket_count_[i] = new StepCounter(
           config
             .WithAdditionalTag(kStatistic, kCount)
             .WithAdditionalTag(kBucket,
