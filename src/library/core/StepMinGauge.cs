@@ -46,13 +46,24 @@ namespace Nohros.Metrics
       min_gauge_.GetMeasure(callback, state);
     }
 
-    public void OnStep() {
-      Reset();
+    /// <inheritdoc/>
+    public void GetMeasure(Action<Measure> callback, bool reset) {
+      min_gauge_.GetMeasure(measure => {
+        if (reset) {
+          min_gauge_.Reset();
+        }
+        callback(measure);
+      });
     }
 
     /// <inheritdoc/>
-    public void Reset() {
-      min_gauge_.Reset();
+    public void GetMeasure<T>(Action<Measure, T> callback, T state, bool reset) {
+      min_gauge_.GetMeasure((measure, state2) => {
+        if (reset) {
+          min_gauge_.Reset();
+        }
+        callback(measure, state2);
+      }, state);
     }
 
     /// <inheritdoc/>

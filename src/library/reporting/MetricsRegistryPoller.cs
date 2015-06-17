@@ -70,10 +70,12 @@ namespace Nohros.Metrics.Reporting
         if (composite != null) {
           Poll(composite, predicate, timestamp);
         } else if (predicate(metric.Config)) {
-          metric.GetMeasure(Observe, timestamp);
           var step = metric as IStepMetric;
-          if (step != null)
-            step.OnStep();
+          if (step != null) {
+            step.GetMeasure(Observe, timestamp, true);
+          } else {
+            metric.GetMeasure(Observe, timestamp);
+          }
         }
       }
     }

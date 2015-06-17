@@ -15,6 +15,16 @@ namespace Nohros.Metrics.Tests
       return result;
     }
 
+    public static T Sync<T>(IStepMetric metric, Action<Action<T>, bool> async,
+      MetricContext context, bool reset) {
+      var signaler = new ManualResetEventSlim(false);
+      T result = default(T);
+      async((arg1 => result = arg1), reset);
+      context.Send(signaler.Set);
+      signaler.Wait();
+      return result;
+    }
+
     public static double Sync(IMetric metric, Action<Action<Measure>> async,
       MetricContext context) {
       return Sync<Measure>(metric, async, context).Value;

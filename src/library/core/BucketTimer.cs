@@ -54,7 +54,19 @@ namespace Nohros.Metrics
       /// The time unit to be reported.
       /// </param>
       /// <returns></returns>
+      [Obsolete("This method is obsolete, use the WithRateUnit method instead.", true)]
       public Builder WithMeasureUnit(TimeUnit unit) {
+        return WithRateUnit(unit);
+      }
+
+      /// <summary>
+      /// Sets the time unit used to report the measured values.
+      /// </summary>
+      /// <param name="unit">
+      /// The time unit to be reported.
+      /// </param>
+      /// <returns></returns>
+      public Builder WithRateUnit(TimeUnit unit) {
         MeasureUnit = unit;
         return this;
       }
@@ -168,7 +180,7 @@ namespace Nohros.Metrics
     const string kMax = "max";
 
     readonly TimeUnit unit_;
-    readonly TimeUnit measure_unit_;
+    readonly TimeUnit rate_unit_;
     readonly StepCounter count_;
     readonly StepCounter total_time_;
     readonly StepCounter overflow_count_;
@@ -186,17 +198,17 @@ namespace Nohros.Metrics
     /// </param>
     public BucketTimer(Builder builder) : base(builder.Config, builder.Context) {
       unit_ = builder.TimeUnit;
-      measure_unit_ = builder.MeasureUnit;
+      rate_unit_ = builder.MeasureUnit;
 
       MetricContext context = builder.Context;
 
       MetricConfig config =
         builder
           .Config
-          .WithAdditionalTag("unit", measure_unit_.Name());
+          .WithAdditionalTag("unit", rate_unit_.Name());
 
       count_ = new StepCounter(config.WithAdditionalTag(kStatistic, kCount),
-        context);
+        rate_unit_, context);
       max_ = new StepMaxGauge(config.WithAdditionalTag(kStatistic, kMax));
       min_ = new StepMinGauge(config.WithAdditionalTag(kStatistic, kMin));
 
@@ -215,6 +227,7 @@ namespace Nohros.Metrics
           config
             .WithAdditionalTag(kStatistic, kCount)
             .WithAdditionalTag(kBucket, "bucket=overflow"),
+          rate_unit_,
           context);
 
       buckets_ = builder.Buckets;
@@ -233,11 +246,12 @@ namespace Nohros.Metrics
             .WithAdditionalTag(kStatistic, kCount)
             .WithAdditionalTag(kBucket,
               "bucket={0}{1}".Fmt(buckets_[i].ToString(padding), label)),
+          rate_unit_,
           context);
       }
 
       Func<double, double> convert =
-        measure => ConvertToUnit(measure, measure_unit_);
+        measure => ConvertToUnit(measure, rate_unit_);
 
       var metrics = new List<IMetric> {
         total_time_,

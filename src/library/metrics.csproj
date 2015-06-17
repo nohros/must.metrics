@@ -34,8 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nohros">
-      <HintPath>..\packages\must.common.1.15.10.3\lib\net40\nohros.dll</HintPath>
+    <Reference Include="nohros, Version=1.17.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\must.common.1.17.6.0\lib\net40\nohros.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -45,6 +46,7 @@
   <ItemGroup>
     <Compile Include="annotations\MetricAttribute.cs" />
     <Compile Include="annotations\TagsAttribute.cs" />
+    <Compile Include="core\AbstractStepMetric.cs" />
     <Compile Include="core\BasicCompositeMetric.cs" />
     <Compile Include="core\BucketTimer.cs" />
     <Compile Include="core\StepCounter.cs" />

@@ -38,12 +38,22 @@ namespace Nohros.Metrics
       max_gauge_.GetMeasure(callback, state);
     }
 
-    public void OnStep() {
-      Reset();
+    public void GetMeasure(Action<Measure> callback, bool reset) {
+      max_gauge_.GetMeasure(measure => {
+        if (reset) {
+          max_gauge_.Reset();
+        }
+        callback(measure);
+      });
     }
 
-    public void Reset() {
-      max_gauge_.Reset();
+    public void GetMeasure<T>(Action<Measure, T> callback, T state, bool reset) {
+      max_gauge_.GetMeasure((measure, state2) => {
+        if (reset) {
+          max_gauge_.Reset();
+        }
+        callback(measure, state2);
+      }, state);
     }
 
     public void Update(long v) {

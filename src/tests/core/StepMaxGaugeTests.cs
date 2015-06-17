@@ -12,12 +12,11 @@ namespace Nohros.Metrics.Tests
 
       max.Update(42L);
       max.GetMeasure(measure =>
-        Assert.That(measure.Value, Is.EqualTo(42L)));
+        Assert.That(measure.Value, Is.EqualTo(42L)), true);
 
-      max.OnStep();
       max.Update(10L);
       max.GetMeasure(measure =>
-        Assert.That(measure.Value, Is.EqualTo(10L)));
+        Assert.That(measure.Value, Is.EqualTo(10L)), true);
     }
   }
 }

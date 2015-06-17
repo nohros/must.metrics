@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Threading;
 using Nohros.Extensions.Time;
 
 namespace Nohros.Metrics
@@ -9,7 +8,7 @@ namespace Nohros.Metrics
   /// step interval. The value returned is the rate for the previous interval
   /// as defined by the step.
   /// </summary>
-  public class StepCounter : AbstractMetric, ICounter, IStepMetric
+  public class StepCounter : AbstractStepMetric, ICounter, IStepMetric
   {
     readonly TimeUnit unit_;
     long curr_count_;
@@ -173,13 +172,6 @@ namespace Nohros.Metrics
       context_.Send(() => Update(n));
     }
 
-    public void OnStep() {
-      context_.Send(() => {
-        prev_count_ = curr_count_;
-        prev_tick_ = curr_tick_;
-      });
-    }
-
     /// <summary>
     /// Creates a new counter by using the specified name.
     /// </summary>
@@ -225,9 +217,19 @@ namespace Nohros.Metrics
 
     /// <inheritdoc/>
     protected internal override Measure Compute(long tick) {
+      return Compute(tick, false);
+    }
+
+    /// <inheritdoc/>
+    protected internal override Measure Compute(long tick, bool reset) {
       curr_tick_ = tick;
       double delta = curr_tick_ - prev_tick_;
       double measure = (curr_count_ - prev_count_)/delta;
+
+      if (reset) {
+        prev_count_ = curr_count_;
+        prev_tick_ = curr_tick_;
+      }
       return CreateMeasure(ConvertToUnit(measure));
     }
 

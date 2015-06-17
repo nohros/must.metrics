@@ -17,7 +17,7 @@ namespace Nohros.Metrics.Tests
         new BucketTimer.Builder(config)
           .WithBuckets(new long[] {60, 120, 180})
           .WithTimeUnit(TimeUnit.Seconds)
-          .WithMeasureUnit(TimeUnit.Minutes)
+          .WithRateUnit(TimeUnit.Minutes)
           .WithContext(context)
           .Build();
 
@@ -33,18 +33,16 @@ namespace Nohros.Metrics.Tests
       timer.Update(TimeSpan.FromSeconds(10));
       timer.Update(TimeSpan.FromSeconds(10));
 
-      var measure = Testing.Sync<Measure>(total, total.GetMeasure, context);
+      var measure = GetMeasure(total, context);
       Assert.That(measure.Value, Is.EqualTo(30d/60));
-      
-      OnStep(total);
+
       clock.TickNow(1);
 
       timer.Update(TimeSpan.FromSeconds(30));
 
-      measure = Testing.Sync<Measure>(total, total.GetMeasure, context);
-      Assert.That(measure.Value, Is.EqualTo(30d / 60));
+      measure = GetMeasure(total, context);
+      Assert.That(measure.Value, Is.EqualTo(30d/60));
 
-      OnStep(total);
       clock.TickNow(1);
 
       timer.Update(TimeSpan.FromSeconds(60));
@@ -61,9 +59,9 @@ namespace Nohros.Metrics.Tests
       var context = new MetricContext(clock);
       var timer =
         new BucketTimer.Builder(config)
-          .WithBuckets(new long[] { 60, 120, 180 })
+          .WithBuckets(new long[] {60, 120, 180})
           .WithTimeUnit(TimeUnit.Seconds)
-          .WithMeasureUnit(TimeUnit.Minutes)
+          .WithRateUnit(TimeUnit.Minutes)
           .WithContext(context)
           .Build();
 
@@ -77,57 +75,50 @@ namespace Nohros.Metrics.Tests
       timer.Update(TimeSpan.FromSeconds(10));
       timer.Update(TimeSpan.FromSeconds(10));
 
-      var measure = Testing.Sync<Measure>(b60, b60.GetMeasure, context);
+      var measure = GetMeasure(b60, context);
       Assert.That(measure.Value, Is.EqualTo(1));
 
-      measure = Testing.Sync<Measure>(b120, b120.GetMeasure, context);
+      measure = GetMeasure(b120, context);
       Assert.That(measure.Value, Is.EqualTo(0));
 
-      measure = Testing.Sync<Measure>(b180, b180.GetMeasure, context);
+      measure = GetMeasure(b180, context);
       Assert.That(measure.Value, Is.EqualTo(0));
 
-      OnStep(b60, b120, b180);
       clock.TickNow(1);
 
       timer.Update(TimeSpan.FromSeconds(30));
       timer.Update(TimeSpan.FromSeconds(61));
       timer.Update(TimeSpan.FromSeconds(65));
 
-      measure = Testing.Sync<Measure>(b60, b60.GetMeasure, context);
+      measure = GetMeasure(b60, context);
       Assert.That(measure.Value, Is.EqualTo(1/3d));
 
-      measure = Testing.Sync<Measure>(b120, b120.GetMeasure, context);
+      measure = GetMeasure(b120, context);
       Assert.That(measure.Value, Is.EqualTo(2/3d));
 
-      measure = Testing.Sync<Measure>(b180, b180.GetMeasure, context);
+      measure = GetMeasure(b180, context);
       Assert.That(measure.Value, Is.EqualTo(0));
 
-      OnStep(b60, b120, b180);
       clock.TickNow(1);
 
       timer.Update(TimeSpan.FromSeconds(180));
 
-      measure = Testing.Sync<Measure>(b60, b60.GetMeasure, context);
+      measure = GetMeasure(b60, context);
       Assert.That(measure.Value, Is.EqualTo(0));
 
-      measure = Testing.Sync<Measure>(b120, b120.GetMeasure, context);
+      measure = GetMeasure(b120, context);
       Assert.That(measure.Value, Is.EqualTo(0));
 
-      measure = Testing.Sync<Measure>(b180, b180.GetMeasure, context);
+      measure = GetMeasure(b180, context);
       Assert.That(measure.Value, Is.EqualTo(1/3d));
     }
 
-    void OnStep(IMetric metric) {
+    Measure GetMeasure(IMetric metric, MetricContext context) {
       var step = metric as IStepMetric;
-      if (step != null) {
-        step.OnStep();
+      if (step == null) {
+        return Testing.Sync<Measure>(metric, metric.GetMeasure, context);
       }
-    }
-
-    void OnStep(params IMetric[] metrics) {
-      foreach (var metric in metrics) {
-        OnStep(metric);
-      }
+      return Testing.Sync<Measure>(step, step.GetMeasure, context, true);
     }
 
     IMetric GetMetricWithTag(ICompositeMetric metric, string value) {

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using NUnit.Framework;
 
 namespace Nohros.Metrics.Tests
@@ -11,31 +12,30 @@ namespace Nohros.Metrics.Tests
       var config = new MetricConfig("counter1");
       var clock = new StepClock(TimeSpan.FromMinutes(1));
       var context = new MetricContext(clock);
-      var counter = new StepCounter(config, context);
+      var counter = new StepCounter(config, TimeUnit.Minutes, context);
       
       clock.TickNow(1);
       counter.Increment(10);
 
       Measure measure = Testing.Sync<Measure>(counter, counter.GetMeasure,
         counter.context_);
-      Assert.That(measure.Value, Is.EqualTo(10d/minute.Ticks));
+      Assert.That(measure.Value, Is.EqualTo(10d));
       
-      counter.OnStep();
+      clock.TickNow(1);
       clock.TickNow(1);
       counter.Increment(10);
 
       measure = Testing.Sync<Measure>(counter, counter.GetMeasure,
-        counter.context_);
-      Assert.That(measure.Value, Is.EqualTo(10d/minute.Ticks),
+        counter.context_, true);
+      Assert.That(measure.Value, Is.EqualTo(5d),
         "Should report the same value as previously, since the rate was the same.");
       
-      counter.OnStep();
       clock.TickNow(1);
       counter.Increment(20);
 
       measure = Testing.Sync<Measure>(counter, counter.GetMeasure,
         counter.context_);
-      Assert.That(measure.Value, Is.EqualTo(10d/minute.Ticks*2),
+      Assert.That(measure.Value, Is.EqualTo(20d),
         "Should report the double of the previously value, since the rate was doubled.");
     }
   }

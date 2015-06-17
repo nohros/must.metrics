@@ -55,9 +55,9 @@ namespace Nohros.Metrics.Tests
             Console.WriteLine(tags + " value=" + measure.Value.ToString());
           });
 
-          var step = metric as IStepMetric;
-          if (step != null)
-            step.OnStep();
+          //var step = metric as IStepMetric;
+          //if (step != null)
+            //step.OnStep();
         }
       }
     }

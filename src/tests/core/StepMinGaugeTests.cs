@@ -13,12 +13,11 @@ namespace Nohros.Metrics.Tests
 
       min.Update(42L);
       min.GetMeasure(measure =>
-        Assert.That(measure.Value, Is.EqualTo(42L)));
+        Assert.That(measure.Value, Is.EqualTo(42L)), true);
 
-      min.OnStep();
       min.Update(50L);
       min.GetMeasure(measure =>
-        Assert.That(measure.Value, Is.EqualTo(50L)));
+        Assert.That(measure.Value, Is.EqualTo(50L)), true);
     }
   }
 }
