@@ -221,14 +221,32 @@ namespace Nohros.Metrics
 
       /// <inheritdoc/>
       public void GetMeasure<T>(Action<Measure, T> callback, T state) {
-        metric_.GetMeasure(m => callback(WrapMeasure(m), (state)));
+        metric_.GetMeasure(m => callback(WrapMeasure(m), state));
       }
 
       /// <inheritdoc/>
       public MetricConfig Config { get; private set; }
 
-      Measure WrapMeasure(Measure measure) {
+      protected Measure WrapMeasure(Measure measure) {
         return new Measure(Config, measure.Value, measure.IsObservable);
+      }
+    }
+
+    class StepMetricWrapper : MetricWrapper, IStepMetric
+    {
+      readonly IStepMetric metric_;
+
+      public StepMetricWrapper(Tags tags, IStepMetric metric)
+        : base(tags, metric) {
+        metric_ = metric;
+      }
+
+      public void GetMeasure(Action<Measure> callback, bool reset) {
+        metric_.GetMeasure(m => callback(WrapMeasure(m)), reset);
+      }
+
+      public void GetMeasure<T>(Action<Measure, T> callback, T state, bool reset) {
+        metric_.GetMeasure(m => callback(WrapMeasure(m), state), reset);
       }
     }
 
@@ -433,6 +451,10 @@ namespace Nohros.Metrics
     static IMetric Wrap(IMetric metric, Tags tags) {
       if (metric is ICompositeMetric) {
         return new CompositeMetricWrapper(tags, metric as ICompositeMetric);
+      }
+      var step = metric as IStepMetric;
+      if (step != null) {
+        return new StepMetricWrapper(tags, step);
       }
       return new MetricWrapper(tags, metric);
     }

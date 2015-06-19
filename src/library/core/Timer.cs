@@ -45,18 +45,20 @@ namespace Nohros.Metrics
 
       MetricConfig cfg = config.WithAdditionalTag("unit", unit.Name());
 
-      count_ = new StepCounter(cfg.WithAdditionalTag(kStatistic, kCount), context);
+      count_ = new StepCounter(cfg.WithAdditionalTag(kStatistic, kCount), unit,
+        context);
       max_ = new StepMaxGauge(cfg.WithAdditionalTag(kStatistic, kMax));
       min_ = new StepMinGauge(cfg.WithAdditionalTag(kStatistic, kMin));
       total_time_ =
-        new StepCounter(cfg.WithAdditionalTag(kStatistic, kTotal), context);
+        new StepCounter(cfg.WithAdditionalTag(kStatistic, kTotal),
+          TimeUnit.Ticks, context);
 
       metrics_ = new ReadOnlyCollection<IMetric>(
         new IMetric[] {
           count_,
           new MeasureTransformer(max_, ConvertToUnit),
           new MeasureTransformer(min_, ConvertToUnit),
-          new MeasureTransformer(total_time_, ConvertToUnit)
+          total_time_
         });
     }
 
