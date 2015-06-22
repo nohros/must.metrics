@@ -347,7 +347,8 @@ namespace Nohros.Metrics
     /// Note that the <see cref="RegisterObject(object)"/>  will use
     /// reflection to add all instances of <see cref="IMetric"/> that have
     /// been declared, and also add a tag with the value set to class simple
-    /// name (<see cref="Type.Name"/>) and namespace (<see cref="Type.Namespace"/>).
+    /// name (<see cref="Type.Name"/>) and namespace (
+    /// <see cref="Type.Namespace"/>).
     /// </para>
     /// </remarks>
     /// <returns>
@@ -371,7 +372,8 @@ namespace Nohros.Metrics
     /// Note that the <see cref="RegisterObject(object)"/>  will use
     /// reflection to add all instances of <see cref="IMetric"/> that have
     /// been declared, and also add a tag with the value set to class simple
-    /// name (<see cref="Type.Name"/>) and namespace (<see cref="Type.Namespace"/>).
+    /// name (<see cref="Type.Name"/>) and namespace (
+    /// <see cref="Type.Namespace"/>).
     /// </para>
     /// </remarks>
     /// <returns>
@@ -426,9 +428,12 @@ namespace Nohros.Metrics
     /// </param>
     static void AddMetrics(List<IMetric> metrics, Tags tags, object obj,
       Type type) {
+      // For non-instance object we should register only the static metrics
+      // and for instance objects we should register only instance metrics
       IEnumerable<FieldInfo> metric_fields =
-        GetFields(type)
-          .Where(IsMetricType);
+        (obj == null)
+          ? GetFields(type).Where(x => IsMetricType(x) && x.IsStatic)
+          : GetFields(type).Where(x => IsMetricType(x) && !x.IsStatic);
 
       foreach (FieldInfo field in metric_fields) {
         var metric = field.GetValue(obj) as IMetric;
