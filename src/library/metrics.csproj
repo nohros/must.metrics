@@ -49,6 +49,8 @@
     <Compile Include="core\AbstractStepMetric.cs" />
     <Compile Include="core\BasicCompositeMetric.cs" />
     <Compile Include="core\BucketTimer.cs" />
+    <Compile Include="core\DoubleGauge.cs" />
+    <Compile Include="core\LongGauge.cs" />
     <Compile Include="core\StepCounter.cs" />
     <Compile Include="core\StepMaxGauge.cs" />
     <Compile Include="core\StepMeasureTransformer.cs" />
