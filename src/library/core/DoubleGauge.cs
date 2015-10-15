@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Nohros.Metrics
 {
@@ -9,6 +9,7 @@ namespace Nohros.Metrics
   public class DoubleGauge : AbstractMetric
   {
     double value_;
+    DateTime timestamp_;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="DoubleGauge"/> class by
@@ -66,15 +67,18 @@ namespace Nohros.Metrics
     /// </summary>
     /// <param name="v"></param>
     public void Update(double v) {
-      context_.Send(() => Exchange(v));
+      DateTime timestamp = DateTime.Now;
+      context_.Send(() => Update(v, timestamp));
     }
 
-    void Exchange(double v) {
+    void Update(double v, DateTime timestamp) {
       value_ = v;
+      timestamp_ = timestamp;
     }
 
+    /// <inheritdoc/>
     protected internal override Measure Compute(long tick) {
-      return CreateMeasure(value_);
+      return CreateMeasure(value_, timestamp_);
     }
   }
 }

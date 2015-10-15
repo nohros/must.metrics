@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Threading;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Nohros.Metrics
 {
@@ -9,6 +9,7 @@ namespace Nohros.Metrics
   public class LongGauge : AbstractMetric
   {
     long value_;
+    DateTime timestamp_;
 
     /// <summary>
     /// Initializes a new instance of the <see cref="LongGauge"/> class by
@@ -20,6 +21,7 @@ namespace Nohros.Metrics
     /// </param>
     public LongGauge(MetricConfig config)
       : base(config.WithAdditionalTag(MetricType.Gauge.AsTag())) {
+      timestamp_ = DateTime.MinValue;
     }
 
     /// <summary>
@@ -66,12 +68,17 @@ namespace Nohros.Metrics
     /// </summary>
     /// <param name="v"></param>
     public void Update(long v) {
-      Interlocked.Exchange(ref value_, v);
+      DateTime timestamp = DateTime.Now;
+      context_.Send(() => Update(v, timestamp));
+    }
+
+    void Update(long v, DateTime timestamp) {
+      value_ = v;
+      timestamp_ = timestamp;
     }
 
     protected internal override Measure Compute(long tick) {
-      long v = Interlocked.Read(ref value_);
-      return CreateMeasure(v);
+      return CreateMeasure(value_, timestamp_);
     }
   }
 }
