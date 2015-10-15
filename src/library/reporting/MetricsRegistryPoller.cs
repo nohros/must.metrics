@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using Nohros.Extensions;
-using Nohros.Logging;
 using Nohros.Resources;
 
 namespace Nohros.Metrics.Reporting
@@ -86,7 +85,11 @@ namespace Nohros.Metrics.Reporting
           // A try catch block is used here to ensure that a failure in one
           // observer does not cause any damage.
           try {
-            observer.Observe(measure, timestamp);
+            observer
+              .Observe(measure,
+                measure.TimeStamp == DateTime.MinValue
+                  ? timestamp
+                  : measure.TimeStamp);
           } catch (Exception e) {
             logger_.Error(
               StringResources.Log_MethodThrowsException.Fmt("Observe",

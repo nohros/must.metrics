@@ -19,14 +19,68 @@ namespace Nohros.Metrics
     /// <param name="config">
     /// The <see cref="MetricConfig"/> object that has produced the measure.
     /// </param>
+    public Measure(MetricConfig config, double value) : this(config, value,
+      DateTime.MinValue) {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Measure"/> by using
+    /// the given measured value.
+    /// </summary>
+    /// <param name="value">
+    /// The measured value.
+    /// </param>
+    /// <param name="config">
+    /// The <see cref="MetricConfig"/> object that has produced the measure.
+    /// </param>
     /// <param name="observable">
     /// A value that indicates if the measure shoud be dispatched to a
     /// <see cref="IMeasureObserver"/>.
     /// </param>
-    public Measure(MetricConfig config, double value, bool observable = true) {
+    public Measure(MetricConfig config, double value, bool observable)
+      : this(config, value, DateTime.MinValue, observable) {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Measure"/> by using
+    /// the given measured value.
+    /// </summary>
+    /// <param name="value">
+    /// The measured value.
+    /// </param>
+    /// <param name="config">
+    /// The <see cref="MetricConfig"/> object that has produced the measure.
+    /// </param>
+    /// <param name="timestamp">
+    /// The date and time when the measure was measured
+    /// </param>
+    public Measure(MetricConfig config, double value, DateTime timestamp)
+      : this(config, value, timestamp, false) {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Measure"/> by using
+    /// the given measured value.
+    /// </summary>
+    /// <param name="value">
+    /// The measured value.
+    /// </param>
+    /// <param name="config">
+    /// The <see cref="MetricConfig"/> object that has produced the measure.
+    /// </param>
+    /// <param name="observable">
+    /// A value that indicates if the measure shoud be dispatched to a
+    /// <see cref="IMeasureObserver"/>.
+    /// </param>
+    /// <param name="timestamp">
+    /// The date and time when the measure was measured
+    /// </param>
+    public Measure(MetricConfig config, double value, DateTime timestamp,
+      bool observable) {
       MetricConfig = config;
       Value = value;
       IsObservable = observable;
+      TimeStamp = timestamp;
     }
 
     /// <summary>
@@ -39,6 +93,16 @@ namespace Nohros.Metrics
     /// Gets the instantaneous metric's value
     /// </summary>
     public double Value { get; private set; }
+
+    /// <summary>
+    /// Gets the date and time when the measure was measured.
+    /// </summary>
+    /// <remarks>
+    /// This value is set only for measures of metrics that measure past
+    /// events. Metrics that always measure current events should set the
+    /// value of <see cref="TimeStamp"/> <see cref="DateTime.MinValue"/>.
+    /// </remarks>
+    public DateTime TimeStamp { get; private set; }
 
     /// <summary>
     /// Gets a value indicating if <see cref="Value"/> is observable, which

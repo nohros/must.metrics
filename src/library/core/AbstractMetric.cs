@@ -67,6 +67,32 @@ namespace Nohros.Metrics
     }
 
     /// <summary>
+    /// Creates a <see cref="Measure"/> by using <see cref="Config"/> and the
+    /// given metric's value.
+    /// </summary>
+    /// <param name="measure">
+    /// The value of the measure.
+    /// </param>
+    /// <param name="timestamp">
+    /// The date and time when the <seealso cref="GetMeasure"/> was called.
+    /// </param>
+    /// <returns>
+    /// A <see cref="Measure"/> containg the current metric's value.
+    /// </returns>
+    /// <remarks>
+    /// The date and time when a measure was measured should be atached to
+    /// a measure to allow past measures to be correctly reported, this
+    /// parameter is used only by metrics that can be measured in the past.
+    /// For metrics that does not support this behavior the value of
+    /// <paramref name="timestamp"/> should be equals to
+    /// <see cref="DateTime.MinValue"/>.
+    /// </remarks>
+    /// <see cref="CreateMeasure(double)"/>
+    protected virtual Measure CreateMeasure(double measure, DateTime timestamp) {
+      return new Measure(Config, measure, timestamp);
+    }
+
+    /// <summary>
     /// Computes the current value of a metric, synchrosnouly.
     /// </summary>
     /// <param name="tick">
@@ -79,8 +105,8 @@ namespace Nohros.Metrics
     /// </returns>
     /// <remarks>
     /// Due to the async nature of the metrics methods the
-    /// <see cref="Compute"/> culd be called some time later than when the
-    /// <paramref name="tick"/> was called. If a metric rely on the
+    /// <see cref="Compute"/> could be called some time later than the time
+    /// when the <paramref name="tick"/> was called. If a metric rely on the
     /// value of <see cref="Clock.Tick"/> property to perform some task
     /// to compute the measured value, this delay could produce wrong
     /// measures. To avoid this a <see cref="IMetric"/> should use the
