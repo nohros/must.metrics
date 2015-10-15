@@ -72,9 +72,16 @@ namespace Nohros.Metrics
       context_.Send(() => Update(v, timestamp));
     }
 
-    void Update(long v, DateTime timestamp) {
-      value_ = v;
-      timestamp_ = timestamp;
+    /// <summary>
+    /// Set the current value.
+    /// </summary>
+    /// <param name="v"></param>
+    /// <param name="timestamp"></param>
+    public void Update(long v, DateTime timestamp) {
+      context_.Send(() => {
+        value_ = v;
+        timestamp_ = timestamp;
+      });
     }
 
     protected internal override Measure Compute(long tick) {
