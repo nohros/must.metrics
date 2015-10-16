@@ -55,7 +55,7 @@ namespace Nohros.Metrics
     /// The date and time when the measure was measured
     /// </param>
     public Measure(MetricConfig config, double value, DateTime timestamp)
-      : this(config, value, timestamp, false) {
+      : this(config, value, timestamp, true) {
     }
 
     /// <summary>
