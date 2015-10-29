@@ -47,14 +47,14 @@ namespace Nohros.Metrics
     public virtual void GetMeasure(Action<Measure> callback) {
       long tick = context_.Tick;
       DateTime now = DateTime.Now;
-      context_.Send(() => callback(Compute(tick, now)));
+      context_.Send(() => callback(Compute(tick)));
     }
 
     /// <inheritdoc/>
     public virtual void GetMeasure<T>(Action<Measure, T> callback, T state) {
       long tick = context_.Tick;
       DateTime now = DateTime.Now;
-      context_.Send(() => callback(Compute(tick, now), state));
+      context_.Send(() => callback(Compute(tick), state));
     }
 
     /// <summary>
@@ -201,10 +201,9 @@ namespace Nohros.Metrics
     /// the context of the associated <see cref="MetricContext"/>.
     /// </para>
     /// </remarks>
-    protected internal virtual Measure Compute(long tick, DateTime time) {
-      return Compute(tick);
-    }
-
+    //protected internal virtual Measure Compute(long tick, DateTime time) {
+    //return Compute(tick);
+    //}
     /// <inheritdoc/>
     public MetricConfig Config { get; private set; }
   }
