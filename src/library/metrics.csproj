@@ -32,6 +32,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <DocumentationFile>$(SolutionDir)bin\release\metrics\nohros.metrics.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="nohros, Version=1.17.4.0, Culture=neutral, processorArchitecture=MSIL">
