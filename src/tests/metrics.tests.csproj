@@ -56,11 +56,13 @@
     <Compile Include="core\ExponentialWeightedMovingAverageTest.cs" />
     <Compile Include="core\MaxGaugeTests.cs" />
     <Compile Include="core\MeanRateTests.cs" />
+    <Compile Include="core\Measures.cs" />
     <Compile Include="core\MetricsConfigTest.cs" />
     <Compile Include="core\MinGaugeTests.cs" />
     <Compile Include="core\StepCounterTests.cs" />
     <Compile Include="core\StepMaxGaugeTests.cs" />
     <Compile Include="core\StepMinGaugeTests.cs" />
+    <Compile Include="core\TimerTests.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Program2.cs" />
     <Compile Include="core\SnapshotTests.cs" />
