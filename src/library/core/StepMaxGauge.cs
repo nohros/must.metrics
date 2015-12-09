@@ -1,4 +1,5 @@
 ﻿using System;
+using Nohros.Concurrent;
 
 namespace Nohros.Metrics
 {
@@ -23,6 +24,22 @@ namespace Nohros.Metrics
     /// </param>
     public StepMaxGauge(MetricConfig config) {
       max_gauge_ = new MaxGauge(config);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepMaxGauge"/> class
+    /// by using the given <paramref name="config"/> object.
+    /// </summary>
+    /// <param name="config">
+    /// A <see cref="MetricConfig"/> containing the configuration settings
+    /// for the metric.
+    /// </param>
+    /// <param name="context">
+    /// A <see cref="MetricContext"/> that contains the shared
+    /// <see cref="Mailbox{T}"/> and <see cref="Clock"/>.
+    /// </param>
+    public StepMaxGauge(MetricConfig config, MetricContext context) {
+      max_gauge_ = new MaxGauge(config, context);
     }
 
     /// <inheritdoc/>

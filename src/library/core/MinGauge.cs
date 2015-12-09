@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using Nohros.Concurrent;
 
 namespace Nohros.Metrics
 {
@@ -24,7 +25,23 @@ namespace Nohros.Metrics
     /// for the metric.
     /// </param>
     public MinGauge(MetricConfig config)
-      : base(config.WithAdditionalTag(MetricType.Gauge.AsTag())) {
+      : this(config, MetricContext.ForCurrentProcess) {
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="MinGauge"/> class
+    /// by using the given <paramref name="config"/> object.
+    /// </summary>
+    /// <param name="config">
+    /// A <see cref="MetricConfig"/> containing the configuration settings
+    /// for the metric.
+    /// </param>
+    /// <param name="context">
+    /// A <see cref="MetricContext"/> that contains the shared
+    /// <see cref="Mailbox{T}"/> and <see cref="Clock"/>.
+    /// </param>
+    public MinGauge(MetricConfig config, MetricContext context)
+      : base(config.WithAdditionalTag(MetricType.Gauge.AsTag()), context) {
       value_ = long.MaxValue;
     }
 

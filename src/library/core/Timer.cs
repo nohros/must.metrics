@@ -35,10 +35,35 @@ namespace Nohros.Metrics
     public Timer(MetricConfig config) : this(config, TimeUnit.Seconds) {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Timer"/> class by using
+    /// the given configuration and time unit.
+    /// </summary>
+    /// <param name="config">
+    /// a <see cref="MetricConfig"/> object containing configuration
+    /// information about the metric to be created.
+    /// </param>
+    /// <param name="unit">
+    /// The time unit to be reported.
+    /// </param>
     public Timer(MetricConfig config, TimeUnit unit)
       : this(config, unit, MetricContext.ForCurrentProcess) {
     }
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Timer"/> class by using
+    /// the given configuration.
+    /// </summary>
+    /// <param name="config">
+    /// a <see cref="MetricConfig"/> object containing configuration
+    /// information about the metric to be created.
+    /// </param>
+    /// <param name="unit">
+    /// The time unit to be reported.
+    /// </param>
+    /// <param name="context">
+    /// The <see cref="MetricContext"/> to be used by the timer.
+    /// </param>
     public Timer(MetricConfig config, TimeUnit unit, MetricContext context)
       : base(config, context) {
       unit_ = unit;
@@ -47,8 +72,8 @@ namespace Nohros.Metrics
 
       count_ = new StepCounter(cfg.WithAdditionalTag(kStatistic, kCount), unit,
         context);
-      max_ = new StepMaxGauge(cfg.WithAdditionalTag(kStatistic, kMax));
-      min_ = new StepMinGauge(cfg.WithAdditionalTag(kStatistic, kMin));
+      max_ = new StepMaxGauge(cfg.WithAdditionalTag(kStatistic, kMax), context);
+      min_ = new StepMinGauge(cfg.WithAdditionalTag(kStatistic, kMin), context);
       total_time_ =
         new StepCounter(cfg.WithAdditionalTag(kStatistic, kTotal),
           TimeUnit.Ticks, context);
@@ -56,8 +81,8 @@ namespace Nohros.Metrics
       metrics_ = new ReadOnlyCollection<IMetric>(
         new IMetric[] {
           count_,
-          new MeasureTransformer(max_, ConvertToUnit),
-          new MeasureTransformer(min_, ConvertToUnit),
+          new StepMeasureTransformer(max_, ConvertToUnit),
+          new StepMeasureTransformer(min_, ConvertToUnit),
           total_time_
         });
     }
@@ -102,13 +127,11 @@ namespace Nohros.Metrics
     /// </param>
     public void Update(TimeSpan duration) {
       if (duration > TimeSpan.Zero) {
-        context_.Send(() => {
-          long ticks = duration.Ticks;
-          total_time_.Increment(ticks);
-          count_.Increment();
-          min_.Update(ticks);
-          max_.Update(ticks);
-        });
+        long ticks = duration.Ticks;
+        total_time_.Increment(ticks);
+        count_.Increment();
+        min_.Update(ticks);
+        max_.Update(ticks);
       }
     }
 

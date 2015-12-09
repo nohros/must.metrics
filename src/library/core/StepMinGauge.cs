@@ -1,4 +1,5 @@
 ﻿using System;
+using Nohros.Concurrent;
 
 namespace Nohros.Metrics
 {
@@ -24,6 +25,22 @@ namespace Nohros.Metrics
     /// </param>
     public StepMinGauge(MetricConfig config) {
       min_gauge_ = new MinGauge(config);
+    }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="StepMaxGauge"/> class
+    /// by using the given <paramref name="config"/> object.
+    /// </summary>
+    /// <param name="config">
+    /// A <see cref="MetricConfig"/> containing the configuration settings
+    /// for the metric.
+    /// </param>
+    /// <param name="context">
+    /// A <see cref="MetricContext"/> that contains the shared
+    /// <see cref="Mailbox{T}"/> and <see cref="Clock"/>.
+    /// </param>
+    public StepMinGauge(MetricConfig config, MetricContext context) {
+      min_gauge_ = new MinGauge(config, context);
     }
 
     /// <inheritdoc/>
