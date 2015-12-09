@@ -7,7 +7,7 @@ namespace Nohros.Metrics.Tests
   public class TimerTests
   {
     [Test]
-    public void should_measure_the_percentage_of_time_spent() {
+    public void should_measure_the_percentage_of_total_time_spent() {
       var config = new MetricConfig("timer1");
       var clock = new StepClock(TimeSpan.FromMinutes(1));
       var context = new MetricContext(clock);
@@ -93,6 +93,36 @@ namespace Nohros.Metrics.Tests
       timer.Update(TimeSpan.FromSeconds(5));
 
       measure = Measures.Get(max, context);
+      Assert.That(measure.Value, Is.EqualTo(5));
+    }
+
+    [Test]
+    public void should_measure_the_minimum_value_per_interval() {
+      var config = new MetricConfig("timer1");
+      var clock = new StepClock(TimeSpan.FromMinutes(1));
+      var context = new MetricContext(clock);
+
+      var timer = new Timer(config, TimeUnit.Seconds, context);
+
+      IMetric min =
+        timer
+          .Metrics
+          .First(
+            x => x.Config.Tags.FirstOrDefault(t => t.Value == "min") != null);
+
+      clock.TickNow(1);
+
+      timer.Update(TimeSpan.FromSeconds(30));
+      timer.Update(TimeSpan.FromSeconds(10));
+      timer.Update(TimeSpan.FromSeconds(30));
+
+      var measure = Measures.Get(min, context);
+      Assert.That(measure.Value, Is.EqualTo(10));
+
+      clock.TickNow(1);
+      timer.Update(TimeSpan.FromSeconds(5));
+
+      measure = Measures.Get(min, context);
       Assert.That(measure.Value, Is.EqualTo(5));
     }
   }
