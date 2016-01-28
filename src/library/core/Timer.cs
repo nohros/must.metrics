@@ -14,10 +14,10 @@ namespace Nohros.Metrics
   public class Timer : AbstractMetric, ICompositeMetric, ITimer
   {
     const string kStatistic = "statistic";
-    const string kTotal = "total";
+    const string kTotal = "total.time";
     const string kCount = "count";
-    const string kMin = "min";
-    const string kMax = "max";
+    const string kMin = "min.time";
+    const string kMax = "max.time";
 
     readonly TimeUnit unit_;
     readonly StepCounter count_;

@@ -174,10 +174,11 @@ namespace Nohros.Metrics
     const string kBucket = "metrics.bucket";
 
     const string kStatistic = "statistic";
-    const string kTotal = "total";
+    const string kTotalTime = "total.time";
+    const string kTotalCount = "total.count";
     const string kCount = "count";
-    const string kMin = "min";
-    const string kMax = "max";
+    const string kMin = "min.time";
+    const string kMax = "max.time";
 
     readonly TimeUnit unit_;
     readonly TimeUnit rate_unit_;
@@ -207,7 +208,7 @@ namespace Nohros.Metrics
           .Config
           .WithAdditionalTag("unit", rate_unit_.Name());
 
-      count_ = new StepCounter(config.WithAdditionalTag(kStatistic, kCount),
+      count_ = new StepCounter(config.WithAdditionalTag(kStatistic, kTotalCount),
         rate_unit_, context);
       max_ = new StepMaxGauge(config.WithAdditionalTag(kStatistic, kMax));
       min_ = new StepMinGauge(config.WithAdditionalTag(kStatistic, kMin));
@@ -218,7 +219,7 @@ namespace Nohros.Metrics
       // interval.
       MetricConfig time_config =
         config
-          .WithAdditionalTag(kStatistic, kTotal)
+          .WithAdditionalTag(kStatistic, kTotalTime)
           .WithAdditionalTag("unit", "nounit");
       total_time_ = new StepCounter(time_config, TimeUnit.Ticks, context);
 
