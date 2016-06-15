@@ -86,10 +86,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\benckmarks\metrics.benchmarks.csproj">
-      <Project>{27BA651C-7219-4AE5-8C3D-61B046D9DA5B}</Project>
-      <Name>metrics.benchmarks</Name>
-    </ProjectReference>
     <ProjectReference Include="..\library\metrics.csproj">
       <Project>{EE140ABF-C917-44D7-B89F-D6946332F507}</Project>
       <Name>metrics</Name>
