@@ -58,38 +58,32 @@ namespace Nohros.Metrics.Reporting
     /// be fetched.
     /// </param>
     public void Poll(Func<MetricConfig, bool> predicate) {
-      DateTime now = DateTime.Now;
-      Poll(registry_.Metrics, predicate, now);
+      Poll(registry_.Metrics, predicate);
     }
 
-    void Poll(IEnumerable<IMetric> metrics, Func<MetricConfig, bool> predicate,
-      DateTime timestamp) {
+    void Poll(IEnumerable<IMetric> metrics, Func<MetricConfig, bool> predicate) {
       foreach (var metric in metrics) {
         var composite = metric as ICompositeMetric;
         if (composite != null) {
-          Poll(composite, predicate, timestamp);
+          Poll(composite, predicate);
         } else if (predicate(metric.Config)) {
           var step = metric as IStepMetric;
           if (step != null) {
-            step.GetMeasure(Observe, timestamp, true);
+            step.GetMeasure(Observe, true);
           } else {
-            metric.GetMeasure(Observe, timestamp);
+            metric.GetMeasure(Observe);
           }
         }
       }
     }
 
-    void Observe(Measure measure, DateTime timestamp) {
+    void Observe(Measure measure) {
       if (measure.IsObservable) {
         foreach (var observer in observers_) {
           // A try catch block is used here to ensure that a failure in one
           // observer does not cause any damage.
           try {
-            observer
-              .Observe(measure,
-                measure.TimeStamp == DateTime.MinValue
-                  ? timestamp
-                  : measure.TimeStamp);
+            observer.Observe(measure);
           } catch (Exception e) {
             logger_.Error(
               StringResources.Log_MethodThrowsException.Fmt("Observe",
