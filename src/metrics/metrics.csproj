@@ -35,9 +35,8 @@
     <DocumentationFile>$(SolutionDir)bin\release\metrics\nohros.metrics.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nohros, Version=1.17.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\must.common.1.17.6.0\lib\net40\nohros.dll</HintPath>
+    <Reference Include="nohros">
+      <HintPath>..\..\packages\must.common.2.2.0.0\lib\net40\nohros.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -134,7 +133,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
