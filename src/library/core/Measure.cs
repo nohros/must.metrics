@@ -80,7 +80,7 @@ namespace Nohros.Metrics
       MetricConfig = config;
       Value = value;
       IsObservable = observable;
-      TimeStamp = timestamp;
+      Timestamp = timestamp;
     }
 
     /// <summary>
@@ -93,16 +93,16 @@ namespace Nohros.Metrics
     /// Gets the instantaneous metric's value
     /// </summary>
     public double Value { get; private set; }
-
+    
     /// <summary>
     /// Gets the date and time when the measure was measured.
     /// </summary>
     /// <remarks>
     /// This value is set only for measures of metrics that measure past
     /// events. Metrics that always measure current events should set the
-    /// value of <see cref="TimeStamp"/> <see cref="DateTime.MinValue"/>.
+    /// value of <see cref="Timestamp"/> <see cref="DateTime.MinValue"/>.
     /// </remarks>
-    public DateTime TimeStamp { get; private set; }
+    public DateTime Timestamp { get; private set; }
 
     /// <summary>
     /// Gets a value indicating if <see cref="Value"/> is observable, which
