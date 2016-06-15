@@ -18,6 +18,19 @@ namespace Nohros.Metrics.Reporting
     readonly IMetricsRegistry registry_;
     readonly MetricsLogger logger_;
 
+    /// <summary>
+    /// Initializes a new instance of hte <see cref="MetricsRegistryPoller"/>
+    /// class by using the given <paramref name="observer"/> and
+    /// <paramref name="registry"/>.
+    /// </summary>
+    /// <param name="observer">
+    /// A <see cref="IMeasureObserver"/> object that will receive the measured
+    /// values on each poll.
+    /// </param>
+    /// <param name="registry">
+    /// A <see cref="IMetricsRegistry"/> containing the metrics that should be
+    /// polled.
+    /// </param>
     public MetricsRegistryPoller(IMeasureObserver observer,
       IMetricsRegistry registry) : this(new[] {observer}, registry) {
       logger_ = MetricsLogger.ForCurrentProcess;
