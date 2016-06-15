@@ -20,7 +20,7 @@ namespace Nohros.Metrics
     /// The <see cref="MetricConfig"/> object that has produced the measure.
     /// </param>
     public Measure(MetricConfig config, double value) : this(config, value,
-      DateTime.MinValue) {
+      DateTime.Now) {
     }
 
     /// <summary>
@@ -38,7 +38,7 @@ namespace Nohros.Metrics
     /// <see cref="IMeasureObserver"/>.
     /// </param>
     public Measure(MetricConfig config, double value, bool observable)
-      : this(config, value, DateTime.MinValue, observable) {
+      : this(config, value, DateTime.Now, observable) {
     }
 
     /// <summary>
