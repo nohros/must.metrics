@@ -33,10 +33,15 @@ namespace Nohros.Metrics.Sql
     }
 
     /// <inheritdoc/>
-    public void Observe(Measure measure, DateTime timestamp) {
+    void IMeasureObserver.Observe(Measure measure, DateTime timestamp) {
+      throw new NotImplementedException();
+    }
+
+    /// <inheritdoc/>
+    public void Observe(Measure measure) {
       Tags tags = measure.MetricConfig.Tags;
       long tags_id = GetTagsId(measure.MetricConfig.Name, tags);
-      metrics_dao_.RegisterMeasure(tags_id, measure.Value, timestamp);
+      metrics_dao_.RegisterMeasure(tags_id, measure.Value, measure.Timestamp);
     }
 
     long GetTagsId(string name, Tags tags) {

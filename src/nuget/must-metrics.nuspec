@@ -1,28 +1,28 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
-    <metadata>
-        <id>must.metrics</id>
-        <version>0.14.0.0</version>
-        <title>Must - Metrics</title>
-        <authors>Nohros Inc</authors>
-        <owners>Nohros Inc</owners>
-        <projectUrl>https://github.com/nohros/must.metrics</projectUrl>
-        <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>
-		  A metrics library for .NET inspired by the Codahale metrics
-		  library and Netflix servo.
-        </description>
-        <summary>The metrics package of the nohros must framework.</summary>
-        <copyright>Nohros Inc</copyright>
-        <language>en-US</language>
-        <tags>csharp framework nohros security metrics codahale netflix servo</tags>
+  <metadata>
+    <id>must.metrics</id>
+    <version>0.15.0.0</version>
+    <title>Must - Metrics</title>
+    <authors>Nohros Inc</authors>
+    <owners>Nohros Inc</owners>
+    <projectUrl>https://github.com/nohros/must.metrics</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>
+      A metrics library for .NET inspired by the Codahale metrics
+      library and Netflix servo.
+    </description>
+    <summary>The metrics package of the nohros must framework.</summary>
+    <copyright>Nohros Inc</copyright>
+    <language>en-US</language>
+    <tags>csharp framework nohros security metrics codahale netflix servo</tags>
     <dependencies>
       <dependency id="must.common" version="1.10.0" />
     </dependencies>
-    </metadata>
-    <files>
-      <file src="..\bin\release\metrics\nohros.metrics.dll" target="lib\net40\nohros.metrics.dll" />
-	  <file src="..\bin\release\metrics\nohros.metrics.pdb" target="lib\net40\nohros.metrics.pdb" />
-	  <file src="..\bin\release\metrics\nohros.metrics.xml" target="lib\net40\nohros.metrics.xml" />
-    </files>
+  </metadata>
+  <files>
+    <file src="..\bin\release\metrics\nohros.metrics.dll" target="lib\net40\nohros.metrics.dll" />
+    <file src="..\bin\release\metrics\nohros.metrics.pdb" target="lib\net40\nohros.metrics.pdb" />
+    <file src="..\bin\release\metrics\nohros.metrics.xml" target="lib\net40\nohros.metrics.xml" />
+  </files>
 </package>
