@@ -173,37 +173,6 @@ namespace Nohros.Metrics
     /// </remarks>
     protected internal abstract Measure Compute(long tick);
 
-    /// <summary>
-    /// Computes the current value of a metric, synchrosnouly.
-    /// </summary>
-    /// <param name="tick">
-    /// The value of <see cref="Clock.Tick"/> for the clock
-    /// associated with the current context for the time when the
-    /// <see cref="GetMeasure"/> method was called.
-    /// </param>
-    /// <param name="time">
-    /// The date and time when the <see cref="GetMeasure"/> method was called.
-    /// </param>
-    /// <returns>
-    /// A <see cref="Measure"/> containg the current metric's value.
-    /// </returns>
-    /// <remarks>
-    /// Due to the async nature of the metrics methods the
-    /// <see cref="Compute(long, DateTime)"/> could be called some time later
-    /// than the time when the <paramref name="tick"/> was called. If a metric
-    /// rely on the value of <see cref="Clock.Tick"/> property or the
-    /// <see cref="DateTime.Now"/> to compute the measured value, this delay
-    /// could produce wrong measures. To avoid this a <see cref="IMetric"/>
-    /// should use the the value of the <paramref name="tick"/> as the
-    /// replacement for the <see cref="Clock.Tick"/>.
-    /// <para>
-    /// The <see cref="Compute(long, DateTime)"/> method is executed inside
-    /// the context of the associated <see cref="MetricContext"/>.
-    /// </para>
-    /// </remarks>
-    //protected internal virtual Measure Compute(long tick, DateTime time) {
-    //return Compute(tick);
-    //}
     /// <inheritdoc/>
     public MetricConfig Config { get; private set; }
   }
