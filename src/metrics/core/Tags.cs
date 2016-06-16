@@ -15,11 +15,6 @@ namespace Nohros.Metrics
   /// <summary>
   /// Represents a set of <see cref="Tag"/>.
   /// </summary>
-  /// <remarks>
-  /// The <see cref="Tags"/> uses the <see cref=" Tag.Name"/> to compare for
-  /// equality, which means that there is just one tag with a given name in
-  /// the set.
-  /// </remarks>
   /// <seealso cref="Tag"/>
   public class Tags : IEnumerable<Tag>
   {
@@ -154,6 +149,10 @@ namespace Nohros.Metrics
     /// The collection whose elements are copied to the <see cref="Tags"/>
     /// collection.
     /// </param>
+    /// <remarks>
+    /// If the <paramref name="tags"/> contain more than one tag with the same
+    /// name, only the last enumerated tag will be added.
+    /// </remarks>
     public Tags(IEnumerable<Tag> tags) : this() {
       foreach (var tag in tags) {
         tags_[tag.Name] = tag;
