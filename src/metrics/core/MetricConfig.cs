@@ -145,7 +145,7 @@ namespace Nohros.Metrics
         return false;
       }
 
-      return (config.Name == Name) && config.Tags.EqualsTo(Tags);
+      return (config.Name == Name) && config.Tags.Contains(Tags);
     }
 
     /// <inheritdoc/>

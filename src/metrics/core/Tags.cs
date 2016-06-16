@@ -161,8 +161,8 @@ namespace Nohros.Metrics
     }
 
     /// <summary>
-    /// Determines whether a <see cref="Tags"/> object contains all the
-    /// <see cref="Tag"/> of the specified tags collection.
+    /// Determines whether a <see cref="Tags"/> object contains the
+    /// specified tags collection.
     /// </summary>
     /// <param name="other">
     /// The collection to compare with the current <see cref="Tags"/> object.
@@ -171,9 +171,35 @@ namespace Nohros.Metrics
     /// <c>true</c> if the current <see cref="Tags"/> object contains all
     /// the <see cref="Tag"/> of the specified collection.
     /// </returns>
-    public bool EqualsTo(IEnumerable<Tag> other) {
+    [Obsolete(
+      "This method is obsolete. You should use the Contains(IEnumerable<Tag>) method instead."
+      , true)]
+    public bool EquasTo(IEnumerable<Tag> other) {
+      return Contains(other);
+    }
+
+    /// <summary>
+    /// Determines whether a <see cref="Tags"/> object contains the
+    /// specified tags collection.
+    /// </summary>
+    /// <param name="other">
+    /// The collection to compare with the current <see cref="Tags"/> object.
+    /// </param>
+    /// <returns>
+    /// <c>true</c> if the current <see cref="Tags"/> object contains all
+    /// the <see cref="Tag"/> of the specified collection.
+    /// </returns>
+    public bool Contains(IEnumerable<Tag> other) {
+      if (ReferenceEquals(null, other)) {
+        return false;
+      }
+
+      if (ReferenceEquals(this, other)) {
+        return true;
+      }
       return other.All(tag => tags_.ContainsKey(tag.Name));
     }
+
 
     /// <inheritdoc/>
     IEnumerator IEnumerable.GetEnumerator() {
@@ -199,7 +225,7 @@ namespace Nohros.Metrics
     /// <remarks>
     /// This <see cref="Id"/> should be used only as the <see cref="Tags"/>
     /// object id. This field should not be used to compare two tags
-    /// for equality, because each object will have your own id.
+    /// for equality, because each object will have its your own id.
     /// </remarks>
     public Guid Id { get; private set; }
 
@@ -209,6 +235,44 @@ namespace Nohros.Metrics
     /// </summary>
     public int Count {
       get { return tags_.Count; }
+    }
+
+    /// <inheritdoc/>
+    protected bool Equals(Tags other) {
+      // If the elements of the given tags and the current tags is not equals
+      // the tags are not the same.
+      if (other.tags_.Count != tags_.Count) {
+        return false;
+      }
+      return other.All(tag => tags_.ContainsKey(tag.Name));
+    }
+
+    /// <inheritdoc/>
+    public override bool Equals(object obj) {
+      if (ReferenceEquals(null, obj)) {
+        return false;
+      }
+
+      if (ReferenceEquals(this, obj)) {
+        return true;
+      }
+
+      if (obj.GetType() != GetType()) {
+        return false;
+      }
+
+      return Equals((Tags) obj);
+    }
+
+    /// <inheritdoc/>
+    public override int GetHashCode() {
+      unchecked {
+        int hash = 17;
+        foreach (Tag tag in tags_.Values) {
+          hash = hash*23 + tag.GetHashCode();
+        }
+        return hash;
+      }
     }
   }
 }
