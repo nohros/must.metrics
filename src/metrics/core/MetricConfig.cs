@@ -71,6 +71,16 @@ namespace Nohros.Metrics
           .Build());
     }
 
+    /// <summary>
+    /// Gets a copy of the current <see cref="MetricConfig"/> with an
+    /// additional <see cref="Tag"/>.
+    /// </summary>
+    /// <returns>
+    /// A <see cref="MetricConfig"/> whose name is equals to
+    /// <see cref="Name"/> and tags is a concatenation of the <see cref="Tags"/>
+    /// and a tag which name is <paramref name="name"/> and value is
+    /// <paramref name="value"/>.
+    /// </returns>
     public MetricConfig WithAdditionalTag(string name, string value) {
       return new MetricConfig(Name,
         new Tags.Builder(Tags)
@@ -141,10 +151,9 @@ namespace Nohros.Metrics
     /// ohtherwise, <c>false</c>.
     /// </returns>
     public bool Equals(MetricConfig config) {
-      if ((object) config == null) {
+      if (ReferenceEquals(null, config)) {
         return false;
       }
-
       return (config.Name == Name) && config.Tags.Contains(Tags);
     }
 
