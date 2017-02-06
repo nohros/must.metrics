@@ -78,6 +78,9 @@ namespace Nohros.Metrics
     /// The action to be executed.
     /// </param>
     public void Send(Action runnable) {
+      if (runnable == null) {
+        throw new ArgumentNullException("runnable");
+      }
       mailbox_.Send(runnable);
     }
 
