@@ -23,11 +23,11 @@ namespace Nohros.Metrics.Tests
       
       clock.TickNow(1);
       clock.TickNow(1);
-      counter.Increment(10);
+      counter.Increment(20);
 
       measure = Testing.Sync<Measure>(counter, counter.GetMeasure,
         counter.context_, true);
-      Assert.That(measure.Value, Is.EqualTo(5d),
+      Assert.That(measure.Value, Is.EqualTo(10d),
         "Should report the same value as previously, since the rate was the same.");
       
       clock.TickNow(1);
