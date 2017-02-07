@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Configuration;
 using Nohros.Concurrent;
+using Nohros.Logging;
 
 namespace Nohros.Metrics
 {
@@ -17,7 +17,7 @@ namespace Nohros.Metrics
     /// Initializes a new instance of the <see cref="MetricContext"/>
     /// </summary>
     public MetricContext()
-      : this(new Mailbox<Action>(x => x()), new StopwatchClock()) {
+      : this(new Mailbox<Action>(Run), new StopwatchClock()) {
     }
 
     /// <summary>
@@ -28,7 +28,7 @@ namespace Nohros.Metrics
     /// A <see cref="Clock"/> that can be used to measure the passage of time.
     /// </param>
     public MetricContext(Clock clock)
-      : this(new Mailbox<Action>(x => x()), clock) {
+      : this(new Mailbox<Action>(Run), clock) {
     }
 
     /// <summary>
@@ -61,6 +61,21 @@ namespace Nohros.Metrics
 
     static MetricContext() {
       ForCurrentProcess = new MetricContext();
+    }
+
+    /// <summary>
+    /// Runs the given delegate and ensures that the given
+    /// <paramref name="action"/> is runnable.
+    /// </summary>
+    /// <param name="action">
+    /// The delegate to be executed.
+    /// </param>
+    static void Run(Action action) {
+      if (action != null) {
+        action();
+      } else {
+        MustLogger.ForCurrentProcess.Warn(Resources.EmptyDelegate);
+      }
     }
 
     /// <summary>

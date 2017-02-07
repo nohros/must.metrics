@@ -129,4 +129,7 @@
   <data name="NullAnnotatedField" xml:space="preserve">
     <value>Field [{0}] in class [{1}] is null. All metric fields must be initialized before registering.</value>
   </data>
+  <data name="EmptyDelegate" xml:space="preserve">
+    <value>An empty [Action] delegate was supplied do be run on a [MetricsContext]. This is usually a signal that the [Action] was garbage collected.</value>
+  </data>
 </root>
