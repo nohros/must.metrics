@@ -18,7 +18,7 @@ namespace Nohros.Metrics.Tests
         timer
           .Metrics
           .First(
-            x => x.Config.Tags.FirstOrDefault(t => t.Value == "total") != null);
+            x => x.Config.Tags.FirstOrDefault(t => t.Value == "total.time") != null);
 
       clock.TickNow(1);
 
@@ -78,7 +78,7 @@ namespace Nohros.Metrics.Tests
         timer
           .Metrics
           .First(
-            x => x.Config.Tags.FirstOrDefault(t => t.Value == "max") != null);
+            x => x.Config.Tags.FirstOrDefault(t => t.Value == "max.time") != null);
 
       clock.TickNow(1);
 
@@ -108,7 +108,7 @@ namespace Nohros.Metrics.Tests
         timer
           .Metrics
           .First(
-            x => x.Config.Tags.FirstOrDefault(t => t.Value == "min") != null);
+            x => x.Config.Tags.FirstOrDefault(t => t.Value == "min.time") != null);
 
       clock.TickNow(1);
 

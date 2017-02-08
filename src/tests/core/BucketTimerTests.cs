@@ -25,7 +25,7 @@ namespace Nohros.Metrics.Tests
         timer
           .Metrics
           .First(
-            x => x.Config.Tags.FirstOrDefault(t => t.Value == "total") != null);
+            x => x.Config.Tags.FirstOrDefault(t => t.Value == "total.time") != null);
 
       clock.TickNow(1);
 

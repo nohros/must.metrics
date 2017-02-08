@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{876848CE-99F0-4AA1-8468-365204B77123}</ProjectGuid>
-    <OutputType>Exe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Nohros.Metrics.Tests</RootNamespace>
     <AssemblyName>nohros.metrics.tests</AssemblyName>
@@ -42,9 +42,6 @@
   <ItemGroup>
     <Compile Include="annotation\AnnotatedMetricsTests.cs" />
     <Compile Include="AppMetricsTests.cs" />
-    <Compile Include="benchmarks\MaxGaugeBenchmarks.cs" />
-    <Compile Include="benchmarks\CounterBenchmarks.cs" />
-    <Compile Include="benchmarks\InterlockedBenchmarks.cs" />
     <Compile Include="core\BucketTimerTests.cs" />
     <Compile Include="core\CallableGaugeTests.cs">
       <SubType>Code</SubType>
@@ -63,8 +60,6 @@
     <Compile Include="core\StepMaxGaugeTests.cs" />
     <Compile Include="core\StepMinGaugeTests.cs" />
     <Compile Include="core\TimerTests.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Program2.cs" />
     <Compile Include="core\SnapshotTests.cs" />
     <Compile Include="core\StepClock.cs" />
     <Compile Include="Testing.cs">
@@ -74,10 +69,10 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="nohros">
-      <HintPath>..\packages\must.common.1.15.10.3\lib\net40\nohros.dll</HintPath>
+      <HintPath>..\..\packages\must.common.2.2.0.0\lib\net40\nohros.dll</HintPath>
     </Reference>
     <Reference Include="nunit.framework">
-      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\packages\NUnit.3.2.1\lib\net40\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
@@ -86,11 +81,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\benckmarks\metrics.benchmarks.csproj">
-      <Project>{27BA651C-7219-4AE5-8C3D-61B046D9DA5B}</Project>
-      <Name>metrics.benchmarks</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\library\metrics.csproj">
+    <ProjectReference Include="..\metrics\metrics.csproj">
       <Project>{EE140ABF-C917-44D7-B89F-D6946332F507}</Project>
       <Name>metrics</Name>
     </ProjectReference>
